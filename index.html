@@ -8,7 +8,9 @@
 <body>
   <h1>
   Days left: <div id="now_to_end_days"></div></h1>
-  <br/>
+  <br/>  <h1>
+    Vacay in: <div id="days_until_vacay"></div></h1>
+    <br/>
 Today: <div id="today"></div>
 <br/>
 Start: <div id="start"></div>
@@ -23,13 +25,14 @@ Workdays: <div id="workdays"></div>
 <script type="text/javascript">
 
 function update() {
-let { today_txt, start_txt, end_day_txt, days, workdays, now_to_end_days } = calculate()
+let { today_txt, start_txt, end_day_txt, days, workdays, now_to_end_days, days_until_vacay } = calculate()
 
 $("#today").text(today_txt)
 $("#start").text(start_txt)
 $("#end").text(end_day_txt)
 $("#days").text(days)
 $("#workdays").text(workdays)
+$("#days_until_vacay").text(days_until_vacay)
 $("#now_to_end_days").text(now_to_end_days + "(" + Math.floor(now_to_end_days*100/workdays) + "%)")
 }
 

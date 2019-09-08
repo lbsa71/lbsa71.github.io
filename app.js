@@ -21,7 +21,8 @@ var days = days_ms / ms_per_day
 
 var workdays = 0
 
-var days_until_now;
+var days_until_now = 0;
+var days_until_vacay = 0;
 
 for(d = 0; d < days; d++)
 {
@@ -42,11 +43,18 @@ for(d = 0; d < days; d++)
 
   var week = Math.floor(days_into_year / 7)
 
-  if(vacation_weeks.includes(week)) is_workday = false
+  if(vacation_weeks.includes(week)) {
+     is_workday = false
+
+     if(days_until_now && !days_until_vacay)
+     {
+       days_until_vacay = workdays-days_until_now
+     }
+   }
 
   if(is_workday) workdays++
 }
 var now_to_end_days = workdays - days_until_now
 
- return { today_txt, start_txt, end_day_txt, days, workdays, now_to_end_days }
+ return { today_txt, start_txt, end_day_txt, days, workdays, now_to_end_days, days_until_vacay }
 }
