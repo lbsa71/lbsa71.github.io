@@ -6,6 +6,9 @@
 
 </head>
 <body>
+  <h1>
+  Days left: <div id="now_to_end_days"></div></h1>
+  <br/>
 Today: <div id="today"></div>
 <br/>
 Start: <div id="start"></div>
@@ -15,13 +18,24 @@ End: <div id="end"></div>
 Days: <div id="days"></div>
 <br/>
 Workdays: <div id="workdays"></div>
+
 </body>
 <script type="text/javascript">
+
+function update() {
+let { today_txt, start_txt, end_day_txt, days, workdays, now_to_end_days } = calculate()
+
 $("#today").text(today_txt)
 $("#start").text(start_txt)
-$("#end").text(end_txt)
+$("#end").text(end_day_txt)
 $("#days").text(days)
 $("#workdays").text(workdays)
+$("#now_to_end_days").text(now_to_end_days + "(" + Math.floor(now_to_end_days*100/workdays) + "%)")
+}
+
+update();
+
+setInterval(update, 1000);
 
 </script>
 </html>
