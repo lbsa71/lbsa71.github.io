@@ -11,8 +11,9 @@
   <br/>  <h1>
     Vacay in: <div id="days_until_vacay"></div></h1>
     <br/>
-Today: <div id="today"></div>
-<br/>
+    Error: <div id="error"></div>
+    <br/>Today: <div id="today"></div>
+    <br/>
 Start: <div id="start"></div>
 <br/>
 End: <div id="end"></div>
@@ -23,17 +24,51 @@ Workdays: <div id="workdays"></div>
 
 </body>
 <script type="text/javascript">
+function assert(actual, expected, msg)
+{
+  if(actual != expected)
+  {
+    $("#error").text((msg || "") + "- Expected " + expected + " but got " + actual)
+  }
+}
+
+assert(calculate(new Date(2018, 11, 1), new Date(2019,0,2), new Date(2019,0,6)).workdays, 15)
+assert(calculate(new Date(2018, 11, 1), new Date(2018,11,1), new Date(2019,0,6)).now_to_end_days, 15, "1/12")
+assert(calculate(new Date(2018, 11, 1), new Date(2018,11,2), new Date(2019,0,6)).now_to_end_days, 15, "2/12")
+assert(calculate(new Date(2018, 11, 1), new Date(2018,11,3), new Date(2019,0,6)).now_to_end_days, 15, "3/12")
+assert(calculate(new Date(2018, 11, 1), new Date(2018,11,4), new Date(2019,0,6)).now_to_end_days, 14, "4/12")
+assert(calculate(new Date(2018, 11, 1), new Date(2018,11,5), new Date(2019,0,6)).now_to_end_days, 13, "5/12")
+assert(calculate(new Date(2018, 11, 1), new Date(2018,11,6), new Date(2019,0,6)).now_to_end_days, 12, "6/12")
+assert(calculate(new Date(2018, 11, 1), new Date(2018,11,7), new Date(2019,0,6)).now_to_end_days, 11, "7/12")
+assert(calculate(new Date(2018, 11, 1), new Date(2018,11,8), new Date(2019,0,6)).now_to_end_days, 10, "8/12")
+assert(calculate(new Date(2018, 11, 1), new Date(2018,11,9), new Date(2019,0,6)).now_to_end_days, 10, "9/12")
+assert(calculate(new Date(2018, 11, 1), new Date(2018,11,10), new Date(2019,0,6)).now_to_end_days, 10, "10/12")
+assert(calculate(new Date(2018, 11, 1), new Date(2018,11,11), new Date(2019,0,6)).now_to_end_days, 9, "11/12")
+
+assert(calculate(new Date(2019, 8, 9), new Date(2019,8,23), new Date(2019,8,23)).workdays, 10)
+
+assert(getFrac(2/3), "2/3")
+assert(getFrac(0.1), "1/10")
+assert(getFrac(0.2), "1/5")
+assert(getFrac(0.75), "3/4")
 
 function update() {
-let { today_txt, start_txt, end_day_txt, days, workdays, now_to_end_days, days_until_vacay } = calculate()
+  var start_day = new Date(1990, 8, 1)
+  var now = new Date()
+  var end_day = new Date(2029, 7, 1)
 
-$("#today").text(today_txt)
-$("#start").text(start_txt)
-$("#end").text(end_day_txt)
-$("#days").text(days)
-$("#workdays").text(workdays)
-$("#days_until_vacay").text(days_until_vacay)
-$("#now_to_end_days").text(now_to_end_days + "(" + Math.floor(now_to_end_days*100/workdays) + "%)")
+  let { today_txt, start_txt, end_day_txt, days, workdays, now_to_end_days, days_until_vacay } = calculate(start_day, now, end_day)
+
+  const ratio = now_to_end_days/workdays
+
+
+  $("#today").text(today_txt)
+  $("#start").text(start_txt)
+  $("#end").text(end_day_txt)
+  $("#days").text(days)
+  $("#workdays").text(workdays)
+  $("#days_until_vacay").text(days_until_vacay)
+  $("#now_to_end_days").text(now_to_end_days + "(" + Math.floor(ratio*100)  + "% - "+ getFrac(ratio) + ")")
 }
 
 update();
