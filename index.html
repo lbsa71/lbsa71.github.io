@@ -11,9 +11,11 @@
   <br/>  <h1>
     Vacay in: <div id="days_until_vacay"></div></h1>
     <br/>
-    Error: <div id="error"></div>
-    <br/>Today: <div id="today"></div>
-    <br/>
+    <div id="error_div">
+      Error: <div id="error"></div>
+      <br/>Today: <div id="today"></div>
+      <br/>
+    </div>
 Start: <div id="start"></div>
 <br/>
 End: <div id="end"></div>
@@ -29,8 +31,17 @@ function assert(actual, expected, msg)
   if(actual != expected)
   {
     $("#error").text((msg || "") + "- Expected " + expected + " but got " + actual)
+    $("#error_div").show()
   }
 }
+
+$("#error_div").hide()
+
+assert(calculate(new Date(2019, 11, 1), new Date(2019,11,13), new Date(2019,11,25)).days_until_vacay, 6, "one day until vacay should start on a friday")
+assert(calculate(new Date(2019, 11, 1), new Date(2019,11,14), new Date(2019,11,25)).days_until_vacay, 5, "first day of vacay should start on a saturday")
+
+assert(calculate(new Date(2019, 11, 1), new Date(2019,11,20), new Date(2019,11,25)).days_until_vacay, 1, "one day until vacay should start on a friday")
+assert(calculate(new Date(2019, 11, 1), new Date(2019,11,21), new Date(2019,11,25)).days_until_vacay, 0, "first day of vacay should start on a saturday")
 
 assert(calculate(new Date(2018, 11, 1), new Date(2019,0,2), new Date(2019,0,6)).workdays, 15)
 assert(calculate(new Date(2018, 11, 1), new Date(2018,11,1), new Date(2019,0,6)).now_to_end_days, 15, "1/12")
