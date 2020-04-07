@@ -3,8 +3,8 @@ var vlSpec = {
 
   data: {
     name: "raw",
-    // url: "data/covid-19.csv",
-    url: "https://opendata.ecdc.europa.eu/covid19/casedistribution/csv",
+    url: "data/covid-19.csv",
+    // url: "https://opendata.ecdc.europa.eu/covid19/casedistribution/csv",
     format: {
       type: "csv",
       parse: {
