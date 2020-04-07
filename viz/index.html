@@ -1,0 +1,41 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Vega-Lite COVID-19 Statistics</title>
+      <meta charset="utf-8" />
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+      <script src="https://cdn.jsdelivr.net/npm/vega@5.10.1"></script>
+      <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.10.1"></script>
+      <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.5.2"></script>
+
+      <script src="controller.js"></script>
+      <script src="view.js"></script>
+
+      <style media="screen">
+        /* Add space between Vega-Embed links  */
+        .vega-actions a {
+          margin-right: 5px;
+        }
+        #vis
+        {
+            position:fixed;
+            padding:0;
+            margin:0;
+
+            top:0;
+            left:0;
+
+            width: 100%;
+            height: 100%;
+            background:rgba(255,255,255,0.5);
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Vega-Lite COVID-19 Statistics</h1>
+      <!-- Container for the visualization -->
+      <div id="vis" style="width: 100%; height:100%"></div>
+    </body>
+  </html>
