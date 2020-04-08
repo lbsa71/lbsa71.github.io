@@ -5,6 +5,28 @@ var vlSpec = {
       x: "shared"
     }
   },
+  signals: [
+    {
+      name: "firstCharSignal",
+      value: "A",
+      bind: {
+        "input": "select",
+        "options": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K"
+        ]
+      }
+    }
+  ],
   layer: [{
       transform: [{
         calculate: "datum.deaths * 10000000 / datum.popData2018",
@@ -29,7 +51,7 @@ var vlSpec = {
           type: "line",
           strokeDash: [6, 4],
           clip: "true",
-          interpolate: "basis"
+          interpolate: "linear"
         },
         encoding: {
           y: {
@@ -51,16 +73,22 @@ var vlSpec = {
           }
         }
       },
-      transform: [{
-          filter: {
-            field: "countriesAndTerritories",
-            oneOf: ["Sweden", "Italy", "Norway", "China", "United_States_of_America"]
-          }
+      transform: [
+        // {
+        //   filter: {
+        //     field: "countriesAndTerritories",
+        //     oneOf: ["Sweden", "Italy", "Norway", "China", "United_States_of_America"]
+        //   }
+        // },
+        {
+          calculate: "datum.deaths / datum.popData2018 * 10000000 ",
+          as: "deathsPer10M"
         },
         {
-          calculate: "datum.deaths * 10000000 / datum.popData2018",
-          as: "deathsPer10M"
-        },{
+          calculate: "substring(datum.countriesAndTerritories,0,1)",
+          as: "firstChar"
+        },
+        {
           calculate: "time(datum.dateRep)",
           as: "timestamp"
         },
@@ -89,8 +117,23 @@ var vlSpec = {
           frame: [null, null]
         },
         {
-          filter: "datum.totalDeathsPer10M > 0"
+          // Filter out countries that are not yet statistically valid
+          filter: "datum.totalDeathsPer10M > 10"
+        },
+        {
+          // Filter out very small countries that screw up statistics
+          filter: "datum.popData2018 > 3000000"
         }
+        // ,
+        // {
+        //   filter: {
+        //     field: "firstChar",
+        //     equal: "A"
+        //     //  {
+        //     //   signal: "firstCharSignal"
+        //     // }
+        //   }
+        // }
       ],
       layer: [{
         mark: {
@@ -110,6 +153,19 @@ var vlSpec = {
               "field": "dateRep",
               "type": "ordinal"
             },
+            {
+                "field": "countriesAndTerritories",
+                "type": "nominal"
+              },
+              {
+                  "field": "deaths",
+                  "type": "ordinal"
+                },
+                {
+                    "field": "popData2018",
+                    "type": "nominal"
+                  },
+
             {
               "field": "totalDeathsPer10M",
               "type": "quantitative"
@@ -144,6 +200,18 @@ var vlSpec = {
       type: 'temporal',
       axis: {
         title: 'Date'
+      }
+      ,
+      scale: {
+        domain: [{
+            year: 2020,
+            month: 3
+          },
+          {
+            year: 2020,
+            month: 5
+          }
+        ]
       }
     },
   }
