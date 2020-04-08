@@ -16,21 +16,49 @@ var vlSpec = {
           }
         }
       },
-      transform: [{
-        calculate: "datum.deaths * 10000000 / datum.popData2018",
-        as: "deathsPer10M"
-      }],
-      mark: {
-        type: "line",        
-        clip: "true",
-        interpolate: "basis"
-      },
-      encoding: {
-        y: {
-          field: "Dead",
-          type: "quantitative"
+      layer: [{
+          mark: {
+            type: "rule",
+            clip: "true",
+            opacity: 1
+          },
+          selection: {
+            "highlighted": {
+              "type": "single",
+              "on": "mouseover",
+              "encodings": ["x"],
+              "empty": "none",
+              "nearest": true
+            }
+          },
+          encoding: {
+            "opacity": {
+              "condition": {
+                "selection": "highlighted",
+                "value": 1
+              },
+              "value": 0
+            }
+          }
+        },
+        {
+          transform: [{
+            calculate: "datum.deaths * 10000000 / datum.popData2018",
+            as: "deathsPer10M"
+          }],
+          mark: {
+            type: "line",
+            clip: "true",
+            interpolate: "basis"
+          },
+          encoding: {
+            y: {
+              field: "Dead",
+              type: "quantitative"
+            }
+          }
         }
-      }
+      ]
     },
     {
       data: {
@@ -60,10 +88,24 @@ var vlSpec = {
         clip: "true",
         interpolate: "basis"
       },
+      selection: {
+        countriesAndTerritories: {
+          type: "multi",
+          fields: ["countriesAndTerritories"],
+          bind: "legend"
+        }
+      },
       encoding: {
         color: {
           field: 'countriesAndTerritories',
           type: 'nominal'
+        },
+        opacity: {
+          condition: {
+            "selection": "countriesAndTerritories",
+            "value": 1
+          },
+          value: 0.2
         },
         y: {
           field: "deathsPer10M",
