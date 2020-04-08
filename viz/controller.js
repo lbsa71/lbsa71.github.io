@@ -6,6 +6,14 @@ var vlSpec = {
     }
   },
   layer: [{
+      transform: [{
+        calculate: "datum.deaths * 10000000 / datum.popData2018",
+        as: "deathsPer10M"
+      }],
+      transform: [{
+        calculate: "time(datum.dateRep)",
+        as: "timestamp"
+      }],
       data: {
         name: "deathsPerDaySweden",
         url: "data/deathsPerDaySweden.tsv",
@@ -17,48 +25,19 @@ var vlSpec = {
         }
       },
       layer: [{
-          mark: {
-            type: "rule",
-            clip: "true",
-            opacity: 1
-          },
-          selection: {
-            "highlighted": {
-              "type": "single",
-              "on": "mouseover",
-              "encodings": ["x"],
-              "empty": "none",
-              "nearest": true
-            }
-          },
-          encoding: {
-            "opacity": {
-              "condition": {
-                "selection": "highlighted",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
+        mark: {
+          type: "line",
+          strokeDash: [6, 4],
+          clip: "true",
+          interpolate: "basis"
         },
-        {
-          transform: [{
-            calculate: "datum.deaths * 10000000 / datum.popData2018",
-            as: "deathsPer10M"
-          }],
-          mark: {
-            type: "line",
-            clip: "true",
-            interpolate: "basis"
-          },
-          encoding: {
-            y: {
-              field: "Dead",
-              type: "quantitative"
-            }
+        encoding: {
+          y: {
+            field: "Dead",
+            type: "quantitative"
           }
         }
-      ]
+      }]
     },
     {
       data: {
@@ -81,40 +60,81 @@ var vlSpec = {
         {
           calculate: "datum.deaths * 10000000 / datum.popData2018",
           as: "deathsPer10M"
+        },{
+          calculate: "time(datum.dateRep)",
+          as: "timestamp"
         },
-      ],
-      mark: {
-        type: "line",
-        clip: "true",
-        interpolate: "basis"
-      },
-      selection: {
-        countriesAndTerritories: {
-          type: "multi",
-          fields: ["countriesAndTerritories"],
-          bind: "legend"
+        {
+          groupby: ["countriesAndTerritories"],
+          sort: [{
+            "field": "dateRep"
+          }],
+          window: [{
+            "op": "sum",
+            "field": "deathsPer10M",
+            "as": "totalDeathsPer10M"
+          }],
+          frame: [null, 0]
+        },
+        {
+          groupby: ["countriesAndTerritories"],
+          sort: [{
+            "field": "dateRep"
+          }],
+          window: [{
+            "op": "min",
+            "field": "timestamp",
+            "as": "firstTimestamp"
+          }],
+          frame: [null, null]
+        },
+        {
+          filter: "datum.totalDeathsPer10M > 0"
         }
-      },
-      encoding: {
-        color: {
-          field: 'countriesAndTerritories',
-          type: 'nominal'
+      ],
+      layer: [{
+        mark: {
+          type: "line",
+          clip: "true",
+          interpolate: "basis"
         },
-        opacity: {
-          condition: {
-            "selection": "countriesAndTerritories",
-            "value": 1
+        selection: {
+          countriesAndTerritories: {
+            type: "multi",
+            fields: ["countriesAndTerritories"],
+            bind: "legend"
+          }
+        },
+        encoding: {
+          tooltip: [{
+              "field": "dateRep",
+              "type": "ordinal"
+            },
+            {
+              "field": "totalDeathsPer10M",
+              "type": "quantitative"
+            }
+          ],
+          color: {
+            field: 'countriesAndTerritories',
+            type: 'nominal'
           },
-          value: 0.2
-        },
-        y: {
-          field: "deathsPer10M",
-          type: "quantitative",
-          axis: {
-            title: 'Deaths'
+          opacity: {
+            condition: {
+              "selection": "countriesAndTerritories",
+              "value": 1
+            },
+            value: 0.2
+          },
+          y: {
+            field: "deathsPer10M",
+            type: "quantitative",
+            axis: {
+              title: 'Deaths'
+            }
           }
         }
-      }
+      }]
     }
   ],
 
@@ -124,17 +144,6 @@ var vlSpec = {
       type: 'temporal',
       axis: {
         title: 'Date'
-      },
-      scale: {
-        domain: [{
-            year: 2020,
-            month: 3
-          },
-          {
-            year: 2020,
-            month: 6
-          }
-        ]
       }
     },
   }
@@ -267,18 +276,11 @@ var vlSpec2 = {
       field: 'countriesAndTerritories',
       type: 'nominal'
     },
-    // y: {
-    //   field: 'deathsPer10M',
-    //   type: 'quantitative'
-    // },
     x: {
-      field: 'dateRep',
-      type: 'temporal',
+      field: 'timestamp',
+      type: 'numeric',
       axis: {
         title: 'Date'
-      },
-      condition: {
-        selection: "dates"
       }
     }
   }
