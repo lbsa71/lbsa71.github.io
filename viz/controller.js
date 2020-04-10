@@ -1,32 +1,79 @@
 var vlSpec = {
+
+  $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
+
+  data: {
+    name: "salary",
+    url: "data/AM0103AI.csv",
+    format: {
+      type: "tsv"
+    }
+  },
+  transform: [{
+    filter: "datum['2018'] > 1"
+  }],
+
+  facet: {
+    column: {
+      field: "region",
+      type: "nominal"
+    },
+
+  },
+  spec: {
+
+    mark: {
+      type: "bar"
+    },
+    encoding: {
+      "color": {
+        "field": "kön",
+        "type": "nominal"
+      },
+      y: {
+        field: "2018",
+        type: "quantitative",
+        axis: {
+          title: 'Lön 2018'
+        }
+      },
+
+      x: {
+        field: "kön",
+        type: "nominal"
+      }
+    }
+
+  }
+}
+
+var vlSpec3 = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
   resolve: {
     axis: {
       x: "shared"
     }
   },
-  signals: [
-    {
-      name: "firstCharSignal",
-      value: "A",
-      bind: {
-        "input": "select",
-        "options": [
-          "A",
-          "B",
-          "C",
-          "D",
-          "E",
-          "F",
-          "G",
-          "H",
-          "I",
-          "J",
-          "K"
-        ]
-      }
+  signals: [{
+    name: "firstCharSignal",
+    value: "A",
+    bind: {
+      "input": "select",
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K"
+      ]
     }
-  ],
+  }],
   layer: [{
       transform: [{
         calculate: "datum.deaths * 10000000 / datum.popData2018",
@@ -154,17 +201,17 @@ var vlSpec = {
               "type": "ordinal"
             },
             {
-                "field": "countriesAndTerritories",
-                "type": "nominal"
-              },
-              {
-                  "field": "deaths",
-                  "type": "ordinal"
-                },
-                {
-                    "field": "popData2018",
-                    "type": "nominal"
-                  },
+              "field": "countriesAndTerritories",
+              "type": "nominal"
+            },
+            {
+              "field": "deaths",
+              "type": "ordinal"
+            },
+            {
+              "field": "popData2018",
+              "type": "nominal"
+            },
 
             {
               "field": "totalDeathsPer10M",
@@ -200,8 +247,7 @@ var vlSpec = {
       type: 'temporal',
       axis: {
         title: 'Date'
-      }
-      ,
+      },
       scale: {
         domain: [{
             year: 2020,
