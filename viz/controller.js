@@ -122,18 +122,33 @@ var vlSpec3 = {
         field: "countriesAndTerritories",
         oneOf: [
           "Belgium",
-         "Sweden",
+          "Sweden",
           "Italy",
-        //  "Denmark",
-        //   "Finland",
-            "Norway",
-             "China",
-              "United_States_of_America"]
+          //  "Denmark",
+          //   "Finland",
+          "Norway",
+          "China",
+          "United_States_of_America"
+        ]
       }
     },
     {
       calculate: "datum.deaths / datum.popData2018 * 10000000 ",
       as: "deathsPer10M"
+    },
+    {
+      window: [{
+        op: "mean",
+        field: "deathsPer10M",
+        as: "Average_Deaths"
+      }],
+      groupby: ["countriesAndTerritories"],
+      sort: [{
+        field: "dateRep",
+        order: "ascending"
+      }],
+      ignorePeers: true,
+      frame: [-7, 0]
     },
     {
       calculate: "substring(datum.countriesAndTerritories,0,1)",
@@ -186,159 +201,173 @@ var vlSpec3 = {
     //   }
     // }
   ],
-  vconcat: [
-    {
-    resolve: {
-      axis: {
-        x: "shared"
-      }
-    },
-  layer: [{
-      transform: [{
-        calculate: "datum.deaths * 10000000 / datum.popData2018",
-        as: "deathsPer10M"
-      }],
-      transform: [{
-        calculate: "time(datum.dateRep)",
-        as: "timestamp"
-      }],
-      data: {
-        name: "deathsPerDaySweden",
-        url: "data/deathsPerDaySweden.tsv",
-        format: {
-          type: "tsv",
-          parse: {
-            dateRep: "date:'%m/%d/%Y'"
-          }
+  vconcat: [{
+      resolve: {
+        axis: {
+          x: "shared"
         }
       },
       layer: [{
-        mark: {
-          type: "line",
-          strokeDash: [6, 4],
-          clip: "true",
-          interpolate: "linear"
-        },
-        encoding: {
-          y: {
-            field: "Dead",
-            type: "quantitative"
-          }
-        }
-      }]
-    },
-    {
-      layer: [{
-        mark: {
-          type: "line",
-          clip: "true",
-          interpolate: "basis"
-        },
-        selection: {
-          countriesAndTerritories: {
-            type: "multi",
-            fields: ["countriesAndTerritories"],
-            bind: "legend"
-          }
-        },
-        encoding: {
-          tooltip: [{
-              "field": "dateRep",
-              "type": "ordinal"
-            },
-            {
-              "field": "countriesAndTerritories",
-              "type": "nominal"
-            },
-            {
-              "field": "deaths",
-              "type": "ordinal"
-            },
-            {
-              "field": "popData2018",
-              "type": "nominal"
-            },
-
-            {
-              "field": "totalDeathsPer10M",
-              "type": "quantitative"
+          transform: [{
+            calculate: "datum.deaths * 10000000 / datum.popData2018",
+            as: "deathsPer10M"
+          }],
+          transform: [{
+            calculate: "time(datum.dateRep)",
+            as: "timestamp"
+          }],
+          data: {
+            name: "deathsPerDaySweden",
+            url: "data/deathsPerDaySweden.tsv",
+            format: {
+              type: "tsv",
+              parse: {
+                dateRep: "date:'%m/%d/%Y'"
+              }
             }
-          ],
-          color: {
-            field: 'countriesAndTerritories',
-            type: 'nominal'
           },
-          opacity: {
-            condition: {
-              "selection": "countriesAndTerritories",
-              "value": 1
+          layer: [{
+            mark: {
+              type: "line",
+              strokeDash: [6, 4],
+              clip: "true",
+              interpolate: "linear"
             },
-            value: 0.2
-          },
-          y: {
-            field: "deathsPer10M",
-            type: "quantitative",
-            axis: {
-              title: 'Deaths'
+            encoding: {
+              y: {
+                field: "Dead",
+                type: "quantitative"
+              }
             }
-          }
-        }
-      }]
-    }
-  ],
+          }]
+        },
+        {
+          layer: [{
+            mark: {
+              type: "line",
+              clip: "true",
+              interpolate: "basis"
+            },
+            selection: {
+              countriesAndTerritories: {
+                type: "multi",
+                fields: ["countriesAndTerritories"],
+                bind: "legend"
+              }
+            },
+            encoding: {
+              tooltip: [{
+                  "field": "dateRep",
+                  "type": "ordinal"
+                },
+                {
+                  "field": "countriesAndTerritories",
+                  "type": "nominal"
+                },
+                {
+                  "field": "deaths",
+                  "type": "ordinal"
+                },
+                {
+                  "field": "popData2018",
+                  "type": "nominal"
+                },
 
-  encoding: {
-    x: {
-      field: 'dateRep',
-      type: 'temporal',
-      axis: {
-        title: 'Date'
-      },
-      scale: { domain: { selection: "brush"}},
-    },
-  }
-},
-    {
-  mark: {
-    type: "line",
-    clip: "true",
-    interpolate: "basis"
-  },
-  selection: {
-    brush: { type: "interval", encodings: ["x"] }
-  },
-  encoding: {
-    color: {
-      field: 'countriesAndTerritories',
-      type: 'nominal'
-    },
-    x: {
-      field: 'dateRep',
-      type: 'temporal',
-      axis: {
-        title: 'Date'
-      },
-      scale: {
-        domain: [{
-            year: 2020,
-            month: 3
+                {
+                  "field": "totalDeathsPer10M",
+                  "type": "quantitative"
+                }
+              ],
+              color: {
+                field: 'countriesAndTerritories',
+                type: 'nominal'
+              },
+              opacity: {
+                condition: {
+                  "selection": "countriesAndTerritories",
+                  "value": 1
+                },
+                value: 0.2
+              },
+              y: {
+                field: "Average_Deaths",
+                type: "quantitative",
+                axis: {
+                  title: 'Deaths per 10M'
+                }
+              }
+            }
+          }]
+        }
+      ],
+
+      encoding: {
+        x: {
+          field: 'dateRep',
+          type: 'temporal',
+          axis: {
+            title: 'Date'
           },
-          {
-            year: 2020,
-            month: 6
-          }
-        ]
+          scale: {
+            domain: {
+              selection: "brush"
+            }
+          },
+        },
       }
     },
-    y: {
-      field: "totalDeathsPer10M",
-      type: "quantitative",
-      axis: {
-        title: 'Accumulated Deaths Per 10M'
+    {
+      mark: {
+        type: "line",
+        clip: "true",
+        interpolate: "basis"
+      },
+      selection: {
+        brush: {
+          type: "interval",
+          encodings: ["x"]
+        }
+      },
+      encoding: {
+        color: {
+          field: 'countriesAndTerritories',
+          type: 'nominal'
+        },
+        opacity: {
+          condition: {
+            "selection": "countriesAndTerritories",
+            "value": 1
+          },
+          value: 0.2
+        },
+        x: {
+          field: 'dateRep',
+          type: 'temporal',
+          axis: {
+            title: 'Date'
+          },
+          scale: {
+            domain: [{
+                year: 2020,
+                month: 3
+              },
+              {
+                year: 2020,
+                month: 6
+              }
+            ]
+          }
+        },
+        y: {
+          field: "totalDeathsPer10M",
+          type: "quantitative",
+          axis: {
+            title: 'Accumulated Deaths Per 10M'
+          }
+        }
       }
     }
-  }
-}]
+  ]
 }
 
 // ---
