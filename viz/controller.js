@@ -84,11 +84,7 @@ var vlSpec = {
 
 var vlSpec3 = {
   $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
-  resolve: {
-    axis: {
-      x: "shared"
-    }
-  },
+
   signals: [{
     name: "firstCharSignal",
     value: "A",
@@ -109,6 +105,94 @@ var vlSpec3 = {
       ]
     }
   }],
+  data: {
+    name: "raw",
+    url: "data/covid-19.csv",
+    // url: "https://opendata.ecdc.europa.eu/covid19/casedistribution/csv",
+    format: {
+      type: "csv",
+      parse: {
+        dateRep: "date:'%d/%m/%Y'"
+      }
+    }
+  },
+  transform: [
+    {
+      filter: {
+        field: "countriesAndTerritories",
+        oneOf: [
+          "Belgium",
+         "Sweden",
+          "Italy",
+        //  "Denmark",
+        //   "Finland",
+            "Norway",
+             "China",
+              "United_States_of_America"]
+      }
+    },
+    {
+      calculate: "datum.deaths / datum.popData2018 * 10000000 ",
+      as: "deathsPer10M"
+    },
+    {
+      calculate: "substring(datum.countriesAndTerritories,0,1)",
+      as: "firstChar"
+    },
+    {
+      calculate: "time(datum.dateRep)",
+      as: "timestamp"
+    },
+    {
+      groupby: ["countriesAndTerritories"],
+      sort: [{
+        "field": "dateRep"
+      }],
+      window: [{
+        "op": "sum",
+        "field": "deathsPer10M",
+        "as": "totalDeathsPer10M"
+      }],
+      frame: [null, 0]
+    },
+    {
+      groupby: ["countriesAndTerritories"],
+      sort: [{
+        "field": "dateRep"
+      }],
+      window: [{
+        "op": "min",
+        "field": "timestamp",
+        "as": "firstTimestamp"
+      }],
+      frame: [null, null]
+    },
+    {
+      // Filter out countries that are not yet statistically valid
+      filter: "datum.totalDeathsPer10M > 10"
+    },
+    {
+      // Filter out very small countries that screw up statistics
+      filter: "datum.popData2018 > 3000000"
+    }
+    // ,
+    // {
+    //   filter: {
+    //     field: "firstChar",
+    //     equal: "A"
+    //     //  {
+    //     //   signal: "firstCharSignal"
+    //     // }
+    //   }
+    // }
+  ],
+  vconcat: [
+    {
+    resolve: {
+      axis: {
+        x: "shared"
+      }
+    },
   layer: [{
       transform: [{
         calculate: "datum.deaths * 10000000 / datum.popData2018",
@@ -144,79 +228,6 @@ var vlSpec3 = {
       }]
     },
     {
-      data: {
-        name: "raw",
-        url: "data/covid-19.csv",
-        // url: "https://opendata.ecdc.europa.eu/covid19/casedistribution/csv",
-        format: {
-          type: "csv",
-          parse: {
-            dateRep: "date:'%d/%m/%Y'"
-          }
-        }
-      },
-      transform: [
-        // {
-        //   filter: {
-        //     field: "countriesAndTerritories",
-        //     oneOf: ["Sweden", "Italy", "Norway", "China", "United_States_of_America"]
-        //   }
-        // },
-        {
-          calculate: "datum.deaths / datum.popData2018 * 10000000 ",
-          as: "deathsPer10M"
-        },
-        {
-          calculate: "substring(datum.countriesAndTerritories,0,1)",
-          as: "firstChar"
-        },
-        {
-          calculate: "time(datum.dateRep)",
-          as: "timestamp"
-        },
-        {
-          groupby: ["countriesAndTerritories"],
-          sort: [{
-            "field": "dateRep"
-          }],
-          window: [{
-            "op": "sum",
-            "field": "deathsPer10M",
-            "as": "totalDeathsPer10M"
-          }],
-          frame: [null, 0]
-        },
-        {
-          groupby: ["countriesAndTerritories"],
-          sort: [{
-            "field": "dateRep"
-          }],
-          window: [{
-            "op": "min",
-            "field": "timestamp",
-            "as": "firstTimestamp"
-          }],
-          frame: [null, null]
-        },
-        {
-          // Filter out countries that are not yet statistically valid
-          filter: "datum.totalDeathsPer10M > 10"
-        },
-        {
-          // Filter out very small countries that screw up statistics
-          filter: "datum.popData2018 > 3000000"
-        }
-        // ,
-        // {
-        //   filter: {
-        //     field: "firstChar",
-        //     equal: "A"
-        //     //  {
-        //     //   signal: "firstCharSignal"
-        //     // }
-        //   }
-        // }
-      ],
       layer: [{
         mark: {
           type: "line",
@@ -290,12 +301,51 @@ var vlSpec3 = {
           },
           {
             year: 2020,
-            month: 5
+            month: 6
           }
         ]
       }
     },
   }
+},
+    {
+  mark: {
+    type: "line",
+    clip: "true",
+    interpolate: "basis"
+  },
+  encoding: {
+    color: {
+      field: 'countriesAndTerritories',
+      type: 'nominal'
+    },
+    x: {
+      field: 'dateRep',
+      type: 'temporal',
+      axis: {
+        title: 'Date'
+      },
+      scale: {
+        domain: [{
+            year: 2020,
+            month: 3
+          },
+          {
+            year: 2020,
+            month: 6
+          }
+        ]
+      }
+    },
+    y: {
+      field: "totalDeathsPer10M",
+      type: "quantitative",
+      axis: {
+        title: 'Accumulated Deaths Per 10M'
+      }
+    }
+  }
+}]
 }
 
 // ---
@@ -400,7 +450,7 @@ var vlSpec2 = {
     {
       filter: {
         field: "countriesAndTerritories",
-        oneOf: ["Sweden", "Italy", "Norway "]
+        oneOf: ["Sweden", "Italy", "Norway"]
       }
     },
     {
