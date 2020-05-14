@@ -294,17 +294,7 @@ var vlSpec3 = {
       axis: {
         title: 'Date'
       },
-      scale: {
-        domain: [{
-            year: 2020,
-            month: 3
-          },
-          {
-            year: 2020,
-            month: 6
-          }
-        ]
-      }
+      scale: { domain: { selection: "brush"}},
     },
   }
 },
@@ -313,6 +303,9 @@ var vlSpec3 = {
     type: "line",
     clip: "true",
     interpolate: "basis"
+  },
+  selection: {
+    brush: { type: "interval", encodings: ["x"] }
   },
   encoding: {
     color: {
