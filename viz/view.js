@@ -17,10 +17,14 @@ $(()=> {
 
   vegaEmbed('#vis', vlSpec, opt).then(function(result) {
     view = result.view
-
-    // view
-    //   .insert('salary', salaryData)
-    //   .run()
+  }).catch(console.error)
+/*
+  vegaEmbed('#vis2', vlSpec2, opt).then(function(result) {
+    view = result.view
+  }).catch(console.error)
+*/
+  vegaEmbed('#vis3', vlSpec3, opt).then(function(result) {
+    view = result.view
   }).catch(console.error)
 
  })
