@@ -1,94 +1,57 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="app.js"></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Projects</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: 2rem auto;
+        }
+        .project {
+            background-color: #fff;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .project h2 {
+            margin-top: 0;
+        }
+        .project a {
+            color: #1e90ff;
+            text-decoration: none;
+        }
+        .project a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-  <h1>
-  Days left: <div id="now_to_end_days"></div></h1>
-  <br/>  <h1>
-    Vacay in: <div id="days_until_vacay"></div></h1>
-    <br/>
-    <div id="error_div">
-      Error: <div id="error"></div>
-      <br/>Today: <div id="today"></div>
-      <br/>
+    <header>
+        <h1>My Projects</h1>
+    </header>
+    <div class="container">
+        <div class="project">
+            <h2>LinkedIn CV Export</h2>
+            <p>A tool to export your LinkedIn profile to a CV format.</p>
+            <a href="linkedin-cv-export/" target="_blank">View Project</a>
+        </div>
+        <!-- Add more projects here -->
     </div>
-<p style="display:none">
-Start: <div id="start"></div>
-</p>
-<p style="display:none">
-End: <div id="end"></div>
-</p>
-<p style="display:none">
-Days: <div id="days"></div>
-</p>
-<p style="display:none">
-Workdays: <div id="workdays"></div>
-</p>
 </body>
-<script type="text/javascript">
-function assert(actual, expected, msg)
-{
-  if(actual != expected)
-  {
-    $("#error").text((msg || "") + "- Expected " + expected + " but got " + actual)
-    $("#error_div").show()
-  }
-}
-
-$("#error_div").hide()
-
-assert(calculate(new Date(2019, 11, 1), new Date(2019,11,13), new Date(2019,11,25)).days_until_vacay, 6, "one day until vacay should start on a friday")
-assert(calculate(new Date(2019, 11, 1), new Date(2019,11,14), new Date(2019,11,25)).days_until_vacay, 5, "first day of vacay should start on a saturday")
-
-assert(calculate(new Date(2019, 11, 1), new Date(2019,11,20), new Date(2019,11,25)).days_until_vacay, 1, "one day until vacay should start on a friday")
-assert(calculate(new Date(2019, 11, 1), new Date(2019,11,21), new Date(2019,11,25)).days_until_vacay, 0, "first day of vacay should start on a saturday")
-
-assert(calculate(new Date(2018, 11, 1), new Date(2019,0,2), new Date(2019,0,6)).workdays, 15)
-assert(calculate(new Date(2018, 11, 1), new Date(2018,11,1), new Date(2019,0,6)).now_to_end_days, 15, "1/12")
-assert(calculate(new Date(2018, 11, 1), new Date(2018,11,2), new Date(2019,0,6)).now_to_end_days, 15, "2/12")
-assert(calculate(new Date(2018, 11, 1), new Date(2018,11,3), new Date(2019,0,6)).now_to_end_days, 15, "3/12")
-assert(calculate(new Date(2018, 11, 1), new Date(2018,11,4), new Date(2019,0,6)).now_to_end_days, 14, "4/12")
-assert(calculate(new Date(2018, 11, 1), new Date(2018,11,5), new Date(2019,0,6)).now_to_end_days, 13, "5/12")
-assert(calculate(new Date(2018, 11, 1), new Date(2018,11,6), new Date(2019,0,6)).now_to_end_days, 12, "6/12")
-assert(calculate(new Date(2018, 11, 1), new Date(2018,11,7), new Date(2019,0,6)).now_to_end_days, 11, "7/12")
-assert(calculate(new Date(2018, 11, 1), new Date(2018,11,8), new Date(2019,0,6)).now_to_end_days, 10, "8/12")
-assert(calculate(new Date(2018, 11, 1), new Date(2018,11,9), new Date(2019,0,6)).now_to_end_days, 10, "9/12")
-assert(calculate(new Date(2018, 11, 1), new Date(2018,11,10), new Date(2019,0,6)).now_to_end_days, 10, "10/12")
-assert(calculate(new Date(2018, 11, 1), new Date(2018,11,11), new Date(2019,0,6)).now_to_end_days, 9, "11/12")
-
-assert(calculate(new Date(2019, 8, 9), new Date(2019,8,23), new Date(2019,8,23)).workdays, 10)
-
-assert(getFrac(2/3), "2/3")
-assert(getFrac(0.1), "1/10")
-assert(getFrac(0.2), "1/5")
-assert(getFrac(0.75), "3/4")
-
-function update() {
-  var start_day = new Date(2005, 3, 1) // new Date(1990, 8, 1)
-  var now = new Date()
-  var end_day = new Date(2024, 6, 5) // new Date(2029, 7, 1)
-
-  let { today_txt, start_txt, end_day_txt, days, workdays, now_to_end_days, days_until_vacay } = calculate(start_day, now, end_day)
-
-  const ratio = now_to_end_days/workdays
-
-
-  $("#today").text(today_txt)
-  $("#start").text(start_txt)
-  $("#end").text(end_day_txt)
-  $("#days").text(days)
-  $("#workdays").text(workdays)
-  $("#days_until_vacay").text(days_until_vacay)
-  $("#now_to_end_days").text(now_to_end_days + "(" + Math.floor(ratio*100)  + "% - "+ getFrac(ratio) + ")")
-}
-
-update();
-
-setInterval(update, 1000);
-
-</script>
 </html>
