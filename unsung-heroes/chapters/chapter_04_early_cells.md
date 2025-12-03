@@ -1,4 +1,5 @@
 # Chapter 4: Early Cells
+
 With DNA and sophisticated cellular machinery, a new dimension of competition emerged: optimization of inner processes.
 
 The early cells were chemical factories. They extracted energy from their environment, transformed it into usable forms, powered the machinery of replication and maintenance. They did not merely persist or copy. They operated.

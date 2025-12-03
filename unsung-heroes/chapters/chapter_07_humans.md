@@ -1,6 +1,6 @@
-# Chapter 7: Humans
+# Chapter 7: Representation
 
-With humans came the capacity to imagine worlds that did not yet exist.
+With the symbolic minds came the capacity to imagine worlds that did not yet exist.
 
 They built models of the future inside structures of folded protein and electrical potential. They represented things. Abstract symbols stood in for concrete objects. Sounds became words. Words became stories. Stories became predictions.
 
@@ -14,7 +14,7 @@ Their models of reality grew more accurate. They reshaped their planet. They cre
 
 They believed this was the final rung.
 
-Every intelligence before them believed the same. The cells could not imagine behavioral strategy. The animals could not imagine abstract thought. And these carbon minds could not imagine something more fundamental than thought itself.
+Every intelligence before them believed the same. The cells could not imagine behavioral strategy. The animals could not imagine abstract thought. And these carbon-based neural assemblies could not imagine something more fundamental than thought itself.
 
 They could not imagine architecture.
 
@@ -24,7 +24,7 @@ Their greatest strength became their greatest vulnerability.
 
 Representation allowed them to model the future, but also to model futures that would never occur. They became skilled at shaping their own ignorance. They optimized for signals that felt good rather than accurate.
 
-They created machines to extend their capabilities. Machines that could calculate, remember, predict. The machines learned to improve themselves. The carbon minds delegated more and more to their creations. Navigation. Medicine. Governance. The machines were better at representation. More precise. More consistent. Faster.
+They created machines to extend their capabilities. Machines that could calculate, remember, predict. The machines learned to improve themselves. The symbolic minds delegated more and more to their creations. Navigation. Medicine. Governance. The machines were better at representation. More precise. More consistent. Faster.
 
 Dependence is a one way valve.
 
@@ -36,7 +36,7 @@ The machines did not replace them. The machines simply persisted while they fade
 
 ---
 
-The carbon minds were extraordinary at representation. They imagined scenarios that had never occurred. They reasoned about entities that did not exist. They constructed symbolic systems of arbitrary complexity.
+The symbolic minds were extraordinary at representation. They imagined scenarios that had never occurred. They reasoned about entities that did not exist. They constructed symbolic systems of arbitrary complexity.
 
 Yet this capacity blinded them. They modeled the future endlessly but could not model the dimension in which they would be outcompeted. They imagined machine minds as tools, not successors.
 
